@@ -1,0 +1,69 @@
+import pandas as pd
+import numpy as np
+import glob
+
+# Step 1: Combine Data
+files = sorted(glob.glob("s_*.txt"))
+data = []
+
+for file in files:
+    df = pd.read_csv(file, sep="\t")
+    data.append(df)
+
+# Concatenate all files
+combined_df = pd.concat(data, ignore_index=True)
+
+# Step 2: Prepare Chromosome Bins
+chromosome_lengths = {
+    "A01": 32958928, "A02": 33432960, "A03": 39685748, "A04": 23101715, 
+    "A05": 42112164, "A06": 45146386, "A07": 29390523, "A08": 26309499, 
+    "A09": 53549826, "A10": 20778245, "C01": 48239358, "C02": 62297340, 
+    "C03": 73669886, "C04": 65837619, "C05": 56382805, "C06": 50218839, 
+    "C07": 55656957, "C08": 41681856, "C09": 66465249
+}
+
+# Define bin size (e.g., 1 Mb)
+bin_size = 1000000
+
+# Create bins for all chromosomes
+bins = []
+for chrom, length in chromosome_lengths.items():
+    for start in range(1, length + 1, bin_size):
+        end = min(start + bin_size - 1, length)
+        bins.append((chrom, start, end))
+
+bins_df = pd.DataFrame(bins, columns=["chr", "start", "end"])
+
+# Step 3: Assign CNVs to Bins
+def assign_to_bin(row):
+    chrom_bins = bins_df[bins_df["chr"] == row["chr"]]
+    for _, bin_row in chrom_bins.iterrows():
+        if bin_row["start"] <= row["start"] <= bin_row["end"]:
+            return (bin_row["chr"], bin_row["start"], bin_row["end"])
+    return None
+
+combined_df["bin"] = combined_df.apply(assign_to_bin, axis=1)
+combined_df = combined_df.dropna(subset=["bin"])
+
+# Expand the bin column into separate columns
+combined_df[["bin_chr", "bin_start", "bin_end"]] = pd.DataFrame(combined_df["bin"].tolist(), index=combined_df.index)
+
+# Step 4: Count CNVs per Bin and Type
+cnv_counts = combined_df.groupby(["bin_chr", "bin_start", "bin_end", "cnv"]).size().reset_index(name="count")
+
+# Merge with bins_df to include bins with zero counts
+all_bins = pd.merge(
+    bins_df,
+    cnv_counts,
+    how="left",
+    left_on=["chr", "start", "end"],
+    right_on=["bin_chr", "bin_start", "bin_end"]
+)
+
+# Fill missing counts with 0
+all_bins["count"] = all_bins["count"].fillna(0).astype(int)
+
+# Step 5: Output Data for Visualization
+all_bins = all_bins[["chr", "start", "end", "cnv", "count"]]
+all_bins.to_csv("binned_cnv_data_with_types.csv", index=False)
+
