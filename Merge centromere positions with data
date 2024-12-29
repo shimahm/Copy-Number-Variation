@@ -1,0 +1,27 @@
+# Load necessary libraries
+library(dplyr)
+
+# Read the data
+data <- read.csv("updated_merged_chromosome_bins.csv")
+
+# Centromere positions
+centromere_positions <- data.frame(
+  Chr = c("A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08", "A09", "A10", 
+          "C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09"),
+  CE_start = c(16253718, 19758814, 34171681, 6690908, 13433039, 15284393, 
+               6269211, 6744705, 20854042, 5001417, 28226161, 38280557, 
+               47287128, 21774085, 30453335, 11301696, 11000690, 11827533, 33817935)
+)
+
+# Merge centromere positions with data
+data <- merge(data, centromere_positions, by.x = "chr", by.y = "Chr", all.x = TRUE)
+
+# Add a new column based on centromere position
+data <- data %>%
+  mutate(arm = ifelse(start < CE_start, "p", "q"))
+
+# Save the updated data to a new CSV file
+write.csv(data, "updated_data_with_arms.csv", row.names = FALSE)
+
+# View the updated data
+head(data)
