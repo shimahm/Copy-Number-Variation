@@ -1,0 +1,43 @@
+require(ggideogram)
+
+library(ggplot2)
+karyotype_a_bna <- read.table("updated_data_with_arms.txt", sep = "\t", header = T, stringsAsFactors = F)
+
+head(karyotype_a_bna)
+# unique(karyotype_a_bna$CNV_Group)
+
+
+
+# Define the color mapping for CNV_Group
+cytoband_colors <- c(
+  "dup/del" = "#29a347",
+  "deletion" = "#1078cc",
+  "duplication" = "#cc2121",
+  "no CNV" = "white"
+)
+
+# Plotting the data
+kardy<- ggplot(karyotype_a_bna) +
+  geom_ideogram(aes(x = chr, ymin = start, ymax = end, 
+                    chrom = chr, fill = CNV_Group, 
+                    alpha = CNV_Count, arm = arm), 
+                radius = unit(12, 'pt'), width = 0.5, linewidth = .2, 
+                colour = 'black', show.legend = TRUE) +
+  scale_fill_manual(values = cytoband_colors) +
+  scale_alpha(range = c(0.1, 2.5)) + #0.3-2 
+  theme_void()
+# theme(
+#   axis.title = element_blank(),
+#   axis.text = element_blank(),
+#   axis.ticks = element_blank(),
+#   panel.background = element_blank(),     # Remove panel background
+#   panel.grid = element_blank(),           # Remove grid lines
+#   panel.border = element_blank(),         # Remove panel border
+#   plot.background = element_blank()       # Remove overall plot background
+# )
+
+  
+kardy
+# Save the plot to a file 
+ggsave("karyotype_plot.png", plot = kardy, width = 10, height = 8, dpi = 300)
+
