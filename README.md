@@ -1,10 +1,9 @@
-Copy Number Variation (CNV) analysis in the oil-related genes region of Brassica napus
+Copy Number Variation (CNV) Analysis in the FAE1 Gene Region of Brassica napus
 Overview
 This project investigates the genetic basis of fatty acid diversity in Brassica napus by analyzing copy number variations (CNVs), with a focus on the FAE1 gene region. We resequenced 18 selected lines with varying fatty acid levels and implemented a bioinformatics pipeline to identify CNVs contributing to phenotypic variation.
 
 📊 Pipeline Summary
 1. Sample Selection and Sequencing
-18 plant lines with diverse fatty acid profiles were selected.
 
 Genomic DNA libraries were constructed and subjected to Illumina resequencing.
 
@@ -16,7 +15,7 @@ Trimmomatic: Trimming of low-quality reads and adapter sequences.
 FastQC: Re-evaluation to confirm quality improvement.
 
 3. Read Alignment
-Trimmed reads were aligned to the Brassica napus reference genome (Darmor-bzh v10) using BWA-MEM.
+Trimmed reads were aligned to reference genome using BWA-MEM.
 
 4. Alignment Refinement
 SAM files converted to sorted BAM using samtools.
@@ -46,5 +45,6 @@ Red: Duplications
 Green: Both deletions and duplications in the same region
 
 White: No CNVs detected
+
 
 These CNV patterns provide insights into genomic rearrangements potentially linked to trait variation and adaptation.
