@@ -1,50 +1,49 @@
-Copy Number Variation (CNV) Analysis in the FAE1 Gene Region of Brassica napus
-Overview
-This project investigates the genetic basis of fatty acid diversity in Brassica napus by analyzing copy number variations (CNVs), with a focus on the FAE1 gene region. We resequenced 18 selected lines with varying fatty acid levels and implemented a bioinformatics pipeline to identify CNVs contributing to phenotypic variation.
+🧬 Copy Number Variation (CNV) Analysis in the FA Gene Region of Brassica napus
+🔍 Overview
+This project explores the genetic basis of fatty acid diversity in Brassica napus by analyzing Copy Number Variations (CNVs)—with a special focus on the FAE1 gene region.
+We resequenced 18 lines showing variation in fatty acid content and implemented a robust bioinformatics pipeline to detect CNVs potentially driving phenotypic differences.
 
-📊 Pipeline Summary
-1. Sample Selection and Sequencing
+⚙️ Pipeline Summary
+1️⃣ Sample Selection & Resequencing
+Constructed genomic DNA libraries from selected lines.
 
-Genomic DNA libraries were constructed and subjected to Illumina resequencing.
+Performed Illumina paired-end sequencing.
 
-2. Preprocessing and Quality Control
-FastQC: Initial quality check of raw reads.
+2️⃣ Preprocessing & Quality Control
+🔹 FastQC: Initial quality assessment of raw reads
 
-Trimmomatic: Trimming of low-quality reads and adapter sequences.
+🔹 Trimmomatic: Trimmed low-quality bases and adapter sequences
 
-FastQC: Re-evaluation to confirm quality improvement.
+🔹 FastQC: Rechecked for improved quality post-trimming
 
-3. Read Alignment
-Trimmed reads were aligned to reference genome using BWA-MEM.
+3️⃣ Read Alignment
+🧬 Aligned clean reads to the Brassica napus reference genome (Darmor-bzh v10) using BWA-MEM
 
-4. Alignment Refinement
-SAM files converted to sorted BAM using samtools.
+4️⃣ Alignment Refinement
+🔸 Converted SAM → sorted BAM with samtools
 
-Reads filtered to retain:
+🔸 Applied filtering to retain:
 
-Only uniquely mapped reads (no XA:Z: or SA:Z: tags).
+✅ Uniquely mapped reads (excluding XA:Z: or SA:Z: tags)
 
-Reads with ≤2 mismatches.
+✅ Reads with ≤ 2 mismatches
 
-5. Coverage and CNV Analysis
-samtools depth used to calculate per-base coverage.
+5️⃣ Coverage Calculation & CNV Detection
+📏 Calculated per-base coverage depth with samtools depth
 
-Low-coverage positions (<2) were excluded.
+❌ Excluded positions with coverage < 2
 
-Coverage intersected with gene annotations to assess gene-specific CNVs.
+🧠 Intersected coverage data with gene annotations
 
-CNV visualization highlighted elevated coverage suggesting gene duplications or deletions.
+📊 Visualized coverage to detect CNVs (e.g., elevated or reduced depth in FAE1 region)
 
-🧬 Genomic CNV Landscape
-A chromosome-wide CNV map was generated:
+🌍 CNV Landscape Across the Genome
+A genome-wide CNV map was generated with color-coded segments representing 1 Mbp regions:
 
-Blue: Deletions
+Color	Interpretation
+🔵 Blue	Deletions
+🔴 Red	Duplications
+🟢 Green	Both duplications and deletions
+⚪ White	No CNVs detected
 
-Red: Duplications
-
-Green: Both deletions and duplications in the same region
-
-White: No CNVs detected
-
-
-These CNV patterns provide insights into genomic rearrangements potentially linked to trait variation and adaptation.
+🧩 These patterns highlight regions of structural variation that may be associated with trait diversity and adaptive potential in Brassica napus.
